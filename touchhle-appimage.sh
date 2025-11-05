@@ -22,8 +22,9 @@ chmod +x ./quick-sharun
 
 # share/touchhle/fonts contains symlinks to /usr/share/fonts instead of the real thing
 for L in $(find ./AppDir/share/touchhle/fonts -type l); do
+	linkpath=$(readlink "$L")
 	rm -f "$L"
-	cp -v "$L" ./AppDir/share/touchhle/fonts
+	cp -v "$linkpath" ./AppDir/share/touchhle/fonts
 done
 
 # MAKE APPIMAGE WITH URUNTIME
