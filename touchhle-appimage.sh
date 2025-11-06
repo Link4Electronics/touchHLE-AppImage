@@ -4,9 +4,9 @@ set -eu
 
 ARCH="$(uname -m)"
 VERSION="$(cat ~/version)"
-URUNTIME="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/uruntime2appimage.sh"
 SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/quick-sharun.sh"
 
+export OUTPUT_APPIMAGE=1
 export ADD_HOOKS="self-updater.bg.hook"
 export UPINFO="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|*$ARCH.AppImage.zsync"
 export OUTNAME=TouchHLE-"$VERSION"-anylinux-"$ARCH".AppImage
@@ -14,18 +14,12 @@ export DESKTOP=DUMMY
 export ICON=DUMMY
 export DEPLOY_OPENGL=1
 export DEPLOY_SDL=1
+export DEPLOY_PULSE=1
 
 # ADD LIBRARIES
 wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
 chmod +x ./quick-sharun
 ./quick-sharun /usr/bin/touchHLE
-
-# share/touchhle/fonts contains symlinks to /usr/share/fonts instead of the real thing
-for L in $(find ./AppDir/share/touchhle/fonts -type l); do
-	linkpath=$(readlink "$L")
-	rm -f "$L"
-	cp -v "$linkpath" ./AppDir/share/touchhle/fonts
-done
 
 # MAKE APPIMAGE WITH URUNTIME
 wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime2appimage
