@@ -33,11 +33,4 @@ wget --retry-connrefused --tries=30 "$PACKAGE_BUILDER" -O ./make-aur-package.sh
 chmod +x ./make-aur-package.sh
 ./make-aur-package.sh touchhle
 
-# share/touchhle/fonts contains symlinks to /usr/share/fonts instead of the real thing
-for L in $(find /usr/share/touchhle/fonts -type l); do
-	linkpath=$(readlink "$L")
-	rm -f "$L"
-	cp -v "$linkpath" /usr/share/touchhle/fonts
-done
-
 pacman -Q touchhle | awk '{print $2; exit}' > ~/version
